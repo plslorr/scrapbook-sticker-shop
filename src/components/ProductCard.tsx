@@ -4,31 +4,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Tape, TapeVariant } from '@/components/Tape';
 
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product, quantity: number) => void;
   onClick: () => void;
   rotation?: string;
-  tapeColor?: 'pink' | 'mint' | 'yellow' | 'blue' | 'lavender';
+  tapeVariant: TapeVariant;
 }
-
-const tapeColors = {
-  pink: 'bg-washi-pink',
-  mint: 'bg-washi-mint',
-  yellow: 'bg-washi-yellow',
-  blue: 'bg-washi-blue',
-  lavender: 'bg-washi-lavender',
-};
 
 export const ProductCard = ({
   product,
   onAddToCart,
   onClick,
   rotation = 'rotate-0',
-  tapeColor = 'pink',
+  tapeVariant,
 }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
+  // Generate random tilt between -5 and 5 degrees on mount
+  const [tapeRotation] = useState(() => Math.random() * 10 - 5);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,21 +35,22 @@ export const ProductCard = ({
     <div
       onClick={onClick}
       className={cn(
-        'relative cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:rotate-0',
+        'relative cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:rotate-0 mt-6',
         rotation
       )}
     >
       {/* Washi tape decoration */}
-      <div
-        className={cn(
-          'absolute -top-3 left-1/2 -translate-x-1/2 h-6 w-16 opacity-80 shadow-tape z-10',
-          tapeColors[tapeColor]
-        )}
-        style={{ transform: 'translateX(-50%) rotate(-2deg)' }}
+      <Tape 
+        variant={tapeVariant}
+        className="absolute -top-4 left-1/2 -translate-x-1/2 w-24 z-10"
+        style={{ transform: `translateX(-50%) rotate(${tapeRotation}deg)` }}
       />
 
-      {/* Card */}
-      <div className="bg-paper-white p-3 pb-4 shadow-paper rounded-sm paper-texture">
+      {/* Card Background with rough edges */}
+      <div className="absolute inset-0 bg-paper-white shadow-paper rounded-sm paper-texture rough-edges" />
+
+      {/* Card Content */}
+      <div className="relative p-3 pb-4">
         {/* Image container - polaroid style */}
         <div className="aspect-square overflow-hidden bg-paper-cream mb-3">
           <img

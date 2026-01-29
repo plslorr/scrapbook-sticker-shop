@@ -7,8 +7,12 @@ import { ProductModal } from '@/components/ProductModal';
 import { Cart } from '@/components/Cart';
 import { CartButton } from '@/components/CartButton';
 import { Receipt } from '@/components/Receipt';
-import backgroundImage from '@/assets/background-hills.jpg';
-import { Sparkles } from 'lucide-react';
+import { Header } from '@/components/Header';
+import { Input } from '@/components/ui/input';
+import { TapeVariant } from '@/components/Tape';
+import backgroundImage from '@/assets/background/background.png';
+import grassImage from '@/assets/background/grass.png';
+import { Sparkles, Search } from 'lucide-react';
 
 const rotations = [
   '-rotate-2',
@@ -21,24 +25,18 @@ const rotations = [
   '-rotate-1',
 ];
 
-const tapeColors: ('pink' | 'mint' | 'yellow' | 'blue' | 'lavender')[] = [
-  'pink',
-  'mint',
-  'yellow',
-  'blue',
-  'lavender',
-  'pink',
-  'mint',
-  'yellow',
-];
-
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showReceipt, setShowReceipt] = useState(false);
   const [receiptItems, setReceiptItems] = useState<typeof cart.items>([]);
   const [receiptTotal, setReceiptTotal] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const cart = useCart();
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleCheckout = () => {
     setReceiptItems([...cart.items]);
@@ -50,52 +48,62 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative">
-      {/* Fixed Background */}
+      {/* Background */}
       <div
-        className="fixed inset-0 z-0"
+        className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'repeat',
         }}
       />
 
       {/* Overlay for readability */}
       <div className="fixed inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-paper-white/30" />
 
+      {/* Fixed Grass */}
+      <div className="fixed bottom-0 left-0 right-0 z-[5] pointer-events-none translate-y-10 md:translate-y-20 flex justify-center items-end overflow-hidden">
+        <img 
+          src={grassImage} 
+          alt="" 
+          className="flex-shrink-0 w-[250%] md:w-full h-auto object-cover max-w-none" 
+        />
+
+      </div>
+
       {/* Cart Button */}
       <CartButton itemCount={cart.itemCount} onClick={() => cart.setIsOpen(true)} />
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen">
-        {/* Header */}
-        <header className="pt-8 pb-6 text-center">
-          <div className="inline-block bg-paper-white/95 px-8 py-4 rounded-sm shadow-polaroid backdrop-blur-sm">
-            {/* Decorative tape */}
-            <div className="absolute -top-3 left-4 h-6 w-16 bg-washi-pink opacity-80" style={{ transform: 'rotate(-5deg)' }} />
-            <div className="absolute -top-3 right-4 h-6 w-14 bg-washi-mint opacity-80" style={{ transform: 'rotate(3deg)' }} />
-            
-            <h1 className="font-handwritten text-5xl md:text-6xl text-ink-brown flex items-center justify-center gap-2">
-              <Sparkles className="h-8 w-8 text-washi-yellow" />
-              Sticker Shop
-              <Sparkles className="h-8 w-8 text-washi-yellow" />
-            </h1>
-            <p className="font-body text-ink-gray mt-2">handmade with love ♥</p>
+      <div className="relative z-10 min-h-screen flex flex-col">
+        <Header />
+
+        {/* Search Bar */}
+        <div className="container mx-auto px-4 pb-8 flex justify-center sticky top-4 z-40">
+           <div className="relative w-full max-w-md">
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <Input
+              type="text"
+              placeholder="Search stickers..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-12 bg-white/90 backdrop-blur-sm border-2 border-primary/20 focus:border-primary/50 text-lg shadow-sm rounded-full font-handwritten"
+            />
           </div>
-        </header>
+        </div>
 
         {/* Product Grid */}
-        <main className="container mx-auto px-4 pb-16">
+        <main className="container mx-auto px-4 pb-16 flex-1">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
-            {products.map((product, index) => (
+            {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}
                 onAddToCart={cart.addToCart}
                 onClick={() => setSelectedProduct(product)}
                 rotation={rotations[index % rotations.length]}
-                tapeColor={tapeColors[index % tapeColors.length]}
+                tapeVariant={(index % 8 + 1) as TapeVariant}
               />
             ))}
           </div>
@@ -105,7 +113,7 @@ const Index = () => {
         <footer className="text-center py-6">
           <div className="inline-block bg-paper-white/90 px-6 py-3 rounded-sm shadow-paper backdrop-blur-sm">
             <p className="font-handwritten text-lg text-ink-gray">
-              Made with ✨ and lots of stickers
+              More content on @plslorr
             </p>
           </div>
         </footer>

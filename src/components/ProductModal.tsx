@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Product } from '@/types/product';
+import { Tape, TapeVariant } from '@/components/Tape';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -35,12 +36,15 @@ export const ProductModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-paper-white paper-texture border-2 border-border p-0 overflow-hidden">
-        {/* Decorative washi tape */}
-        <div className="absolute -top-1 left-8 h-8 w-24 bg-washi-mint opacity-80 shadow-tape" style={{ transform: 'rotate(-3deg)' }} />
-        <div className="absolute -top-1 right-8 h-8 w-20 bg-washi-pink opacity-80 shadow-tape" style={{ transform: 'rotate(4deg)' }} />
+      <DialogContent className="max-w-2xl bg-transparent border-none shadow-none p-0 !overflow-visible">
+        {/* Rough background */}
+        <div className="absolute inset-0 bg-paper-white paper-texture border-2 border-border rough-edges rounded-sm" />
 
-        <div className="p-6 pt-8">
+        {/* Decorative washi tape */}
+        <Tape variant={(Math.floor(Math.random() * 8) + 1) as TapeVariant} className="-top-3 left-8 -rotate-2 opacity-90 z-20" />
+        <Tape variant={(Math.floor(Math.random() * 8) + 1) as TapeVariant} className="-top-3 right-8 rotate-3 opacity-90 z-20" />
+
+        <div className="relative p-6 pt-8 z-10">
           <DialogHeader className="mb-4">
             <DialogTitle className="font-handwritten text-4xl text-ink-brown">
               {product.name}

@@ -10,7 +10,8 @@ import {
 } from '@/components/ui/sheet';
 import { Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
+import paperPageTexture from '@/assets/background/paper-page-texture.png';
+import { Tape, TapeVariant } from '@/components/Tape';
 interface CartProps {
   items: CartItemType[];
   isOpen: boolean;
@@ -32,12 +33,20 @@ export const Cart = ({
 }: CartProps) => {
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="bg-paper-white paper-texture border-l-4 border-washi-mint w-full sm:max-w-md flex flex-col">
+      <SheetContent 
+        className="w-full sm:max-w-md flex flex-col bg-transparent border-none shadow-none px-12"
+        style={{
+          backgroundImage: `url(${paperPageTexture})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'left',
+        }}
+      >
         {/* Decorative tape */}
-        <div className="absolute top-4 -left-2 h-24 w-8 bg-washi-pink opacity-80" style={{ transform: 'rotate(-2deg)' }} />
+        <Tape variant={(Math.floor(Math.random() * 8) + 1) as TapeVariant} className="top-4 -left-6 rotate-[-20deg] w-32 opacity-90" />
+        <Tape variant={(Math.floor(Math.random() * 8) + 1) as TapeVariant} className="top-4 -left-6 rotate-[20deg] w-32 opacity-90" />
         
-        <SheetHeader className="border-b border-dashed border-border pb-4">
-          <SheetTitle className="font-handwritten text-3xl text-ink-brown flex items-center gap-2">
+        <SheetHeader className="border-b border-dashed border-border pb-4 pt-8 sm:pt-0">
+          <SheetTitle className="font-handwritten text-3xl text-ink-brown flex items-center justify-end gap-2">
             <ShoppingBag className="h-7 w-7" />
             Your Cart
           </SheetTitle>
@@ -45,7 +54,7 @@ export const Cart = ({
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-            <div className="w-20 h-20 bg-paper-cream rounded-full flex items-center justify-center mb-4 shadow-paper">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4 border-2 border-dashed border-ink-brown/20">
               <ShoppingBag className="h-10 w-10 text-muted-foreground" />
             </div>
             <p className="font-handwritten text-2xl text-ink-gray mb-2">Your cart is empty!</p>
@@ -53,12 +62,12 @@ export const Cart = ({
           </div>
         ) : (
           <>
-            <ScrollArea className="flex-1 -mx-6 px-6">
+            <ScrollArea className="flex-1 -mx-6 sm:-mx-10 px-6 sm:px-10">
               <div className="space-y-4 py-4">
                 {items.map((item) => (
                   <div
                     key={item.product.id}
-                    className="bg-paper-cream p-3 rounded-sm shadow-paper flex gap-3"
+                    className="p-3 border-b border-dashed border-ink-brown/20 flex gap-3"
                   >
                     <img
                       src={item.product.image}
@@ -113,10 +122,10 @@ export const Cart = ({
               </div>
             </ScrollArea>
 
-            <SheetFooter className="border-t border-dashed border-border pt-4 flex-col gap-4">
+            <SheetFooter className="border-t border-dashed border-border pt-10 flex-col gap-8">
               <div className="flex justify-between items-center w-full">
-                <span className="font-handwritten text-2xl text-ink-gray">Total</span>
-                <span className="font-handwritten text-3xl text-ink-brown px-4 py-1 rounded-full bg-washi-yellow">
+                <span className="font-handwritten text-xl sm:text-lg text-ink-gray">Total</span>
+                <span className="font-handwritten text-2xl sm:text-xl text-ink-brown px-6 py-1 rounded-full bg-washi-yellow ml-4">
                   ${total.toFixed(2)}
                 </span>
               </div>
@@ -125,7 +134,7 @@ export const Cart = ({
                 className="w-full font-body bg-primary hover:bg-primary/90 text-primary-foreground"
                 size="lg"
               >
-                Buy Now
+                Order Now
               </Button>
             </SheetFooter>
           </>

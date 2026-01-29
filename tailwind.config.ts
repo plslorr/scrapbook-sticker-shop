@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        handwritten: ['Caveat', 'cursive'],
-        body: ['Quicksand', 'sans-serif'],
+        handwritten: ['Besley', 'serif'],
+        body: ['Besley', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
